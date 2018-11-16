@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="/static/AdminLTE.css"/>
+    <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/jQuery/jquery-2.2.3.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/datatables/jquery.dataTables.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/datatables/dataTables.bootstrap.min.js}"></script>
+
+    <meta charset="UTF-8">
+    <title>장소 검색</title>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- 검색폼 s -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">장소 검색</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <input type="text" id="keyword" name="keyword" th:value="${keyword}" th:placeholder="키워드"
+                                               class="form-control text-box single-line">
+                                        <button type="button" id="btn_search_local" class="btn btn-info">검색</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 검색폼 s -->
+
+                <!-- 인기검색어 : s -->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">인기 검색어</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table table class="table table-bordered dataTable" role="grid" style="text-align:center">
+                                        <tbody>
+                                        <tr id="tr_favorite_search_keyword">
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 인기검색어 : e -->
+
+                <!-- 장소조회 : s -->
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">조회 결과</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table table class="table table-bordered table-hover dataTable"
+                                           role="grid" style="text-align:center" id="table_local_search_result">
+                                        <thead>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#EEEEEE;width:29%;">장소</th>
+                                            <th style="text-align:center;background-color:#EEEEEE;width:11%;">전화번호</th>
+                                            <th style="text-align:center;background-color:#EEEEEE;width:40%;">주소</th>
+                                            <th style="text-align:center;background-color:#EEEEEE;width:22%;">상세보기</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 장소조회 : e -->
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+
+<script th:inline="Javascript">
+    jQuery(function () {
+        jQuery("#btn_search_local").click(function () {
+            var keyword = jQuery.trim(jQuery("#keyword").val());
+
+            if (keyword == '') {
+                alert("키워드를 입력해주세요");
+                jQuery('#keyword').focus();
+                return false;
+            }
+
+            searchLocal(keyword);
+            saveKeyword(keyword);
+        });
+
+        jQuery('#keyword').keydown(function(event) {
+            if (event.keyCode == 13) {
+                jQuery("#btn_search_local").click();
+            }
+        });
+    });
+
+    function searchLocal(keyword) {
+        jQuery('#table_local_search_result').dataTable({
+            pageLength: 10,
+            bLengthChange: false,
+            bPaginate: true,
+            ordering: false,
+            searching: false,
+            serverSide: true,
+            processing: false,
+            autoWidth: false,
+            destroy: true,
+            ajax : {
+                "url" : "/api/local/search",
+                "type" : "GET",
+                "data" : {
+                    "keyword"       : keyword
+                }
+            },
+            columns :
+                [
+                {data : "place_name"},
+                {data : "phone"},
+                {data : "address_name"},
+                // {data : "place_url"},
+                {data : "place_url",
+                    render: function ( data, type, full, meta ) {
+                        if (data != null) {
+                            /*<![CDATA[*/ return "<a href=\'/local/datail?place_name=" + full.place_name + "&x="+full.x + "&y="+full.y+ "\' target='_blank'> 상세보기 </a>"; /*]]>*/
+                        }
+                        return data;
+                    }
+                }
+            ],
+            recordsTotal : "recordsTotal",
+            recordsFiltered : "recordsFiltered",
+        });
+    }
+
+    function saveKeyword(keyword) {
+        jQuery.ajax({
+            url: "/api/local/keyword",
+            type: "GET",
+            timeout: 3000,
+            data: {
+                keyword : keyword
+            }
+        }).success(function(result){
+            jQuery('#tr_favorite_search_keyword').html('');
+            jQuery.each(result, function(index, itemData) {
+                jQuery('#tr_favorite_search_keyword').append('<td>'+itemData.keyword+' ('+itemData.searchCount+')</td>');
+            });
+        });
+    }
+
+    function detailSearch (keyword, x, y) {
+        alert(keyword);
+    }
+</script>
+
+
+</html>

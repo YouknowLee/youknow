@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="/static/AdminLTE.css"/>
+
+    <meta charset="UTF-8">
+    <title>상세보기</title>
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-default">
+                    <div class="box-header clearfix">
+                        <h4 class="pull-left">상세정보</h4>
+                    </div>
+                    <div class="box-body">
+                        <div class="dataTables_wrapper form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-bordered" role="grid">
+                                        <tbody>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">장소 ID</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.id}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">장소명, 업체명</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.place_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">카테고리 이름</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.category_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">카테고리 그룹 코드</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.category_group_code}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">카테고리 그룹명</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.category_group_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">전화번호</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.phone}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">전체 지번 주소</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.address_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">전체 도로명 주소</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.road_address_name}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">X 좌표값</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.x}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">Y 좌표값</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.y}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">장소 상세페이지 URL</th>
+                                            <td style="width:30%;"><a th:href="${datailPlaceInfo.place_url}" target="_blank">장소 상세페이지</a></td>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;background-color:#F4F4F4;border: 1px solid #e4e4e4;width:20%;">중심좌표까지의 거리 (meter)</th>
+                                            <td style="width:30%;" th:text="${datailPlaceInfo.distance}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+</body>
+</html>

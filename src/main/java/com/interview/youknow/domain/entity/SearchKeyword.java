@@ -1,5 +1,6 @@
 package com.interview.youknow.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@Builder
 public class SearchKeyword {
 
     @Id
@@ -17,18 +19,12 @@ public class SearchKeyword {
     private String keyword;
 
     @Column(name="search_count")
-    private int searchCount = 1;
+    private int searchCount;
 
-    public int getSearchCount() {
-        return searchCount;
-    }
+    public SearchKeyword() {}
 
-    public void setSearchCount(int searchCount) {
-        this.searchCount = searchCount;
-    }
-
-    public SearchKeyword(){}
-    public SearchKeyword(String keyword) {
+    public SearchKeyword(String keyword, int searchCount) {
         this.keyword = keyword;
+        this.searchCount = searchCount;
     }
 }

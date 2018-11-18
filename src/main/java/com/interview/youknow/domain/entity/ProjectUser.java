@@ -1,5 +1,6 @@
 package com.interview.youknow.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@Builder
 public class ProjectUser {
 
     @Id
@@ -19,25 +21,10 @@ public class ProjectUser {
     @Column(name="user_pw")
     private String userPw;
 
-    public ProjectUser(){}
+    public ProjectUser() {}
+
     public ProjectUser(String userId, String userPw) {
         this.userId = userId;
-        this.userPw = userPw;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserPw() {
-        return userPw;
-    }
-
-    public void setUserPw(String userPw) {
         this.userPw = userPw;
     }
 }

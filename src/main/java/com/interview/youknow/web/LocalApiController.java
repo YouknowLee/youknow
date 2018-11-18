@@ -23,27 +23,31 @@ public class LocalApiController {
     private SearchKeywordRepository searchKeywordRepository;
 
     @GetMapping("/search")
-    public DataTableResponse search (@RequestParam("keyword") String keyword, @RequestParam("start") int start) {
+    public DataTableResponse search (@RequestParam("keyword") String keyword, @RequestParam("start") int start, @RequestParam("draw") int draw) {
         if (keyword == null || keyword.isEmpty()) {
             return new DataTableResponse("");
         }
 
         KakaoLocalSearchResponse result = KakaoLocalSearchService.requestLocalSearch(start, keyword);
+
+        // 키워드 저장
+        if (draw == 1 && result.getMeta().getTotal_count() > 0) {
+            Optional<SearchKeyword> optionalSearchKeyword = searchKeywordRepository.findById(keyword);
+            if (optionalSearchKeyword.isPresent()) {
+                optionalSearchKeyword.get().setSearchCount(optionalSearchKeyword.get().getSearchCount() + 1);
+                searchKeywordRepository.save(optionalSearchKeyword.get());
+            } else {
+                searchKeywordRepository.save(SearchKeyword.builder().keyword(keyword).searchCount(1).build());
+            }
+        }
+
         return new DataTableResponse(result.getMeta().getTotal_count(), result.getMeta().getPageable_count(), result.getDocuments());
     }
 
     @GetMapping("/keyword")
     public @ResponseBody
-    List<SearchKeyword> keyword (@RequestParam("keyword") String keyword) {
-        Optional<SearchKeyword> optionalSearchKeyword = searchKeywordRepository.findById(keyword);
-        if (optionalSearchKeyword.isPresent()) {
-            optionalSearchKeyword.get().setSearchCount(optionalSearchKeyword.get().getSearchCount() + 1);
-            searchKeywordRepository.save(optionalSearchKeyword.get());
-        } else {
-            searchKeywordRepository.save(new SearchKeyword(keyword));
-        }
-
+    List<SearchKeyword> getKeywords () {
         List<SearchKeyword> searchKeywords = searchKeywordRepository.findAll(new Sort(Sort.Direction.DESC, "searchCount"));
-        return searchKeywords;
+        return searchKeywords.subList(0, searchKeywords.size() > 10 ? 10 : searchKeywords.size());
     }
 }

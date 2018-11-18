@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class KakaoLocalSearchResponse extends LocalSearchResponse {
+public class KakaoLocalSearchResponse {
     @JsonProperty("documents")
     private List<KakaoLocalSearchDocument> documents;
     @JsonProperty("meta")

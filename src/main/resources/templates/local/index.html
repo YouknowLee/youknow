@@ -2,7 +2,7 @@
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/bootstrap/css/bootstrap.css}"/>
-    <link rel="stylesheet" href="/static/AdminLTE.css"/>
+    <link rel="stylesheet" th:href="@{/webjars/adminlte/2.3.11/dist/css/AdminLTE.css}"/>
     <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/jQuery/jquery-2.2.3.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/datatables/jquery.dataTables.min.js}"></script>
     <script type="text/javascript" th:src="@{/webjars/adminlte/2.3.11/plugins/datatables/dataTables.bootstrap.min.js}"></script>
@@ -52,9 +52,6 @@
                                         <tr id="tr_favorite_search_keyword">
                                         </tr>
                                         </tbody>
-                                        <tfoot>
-
-                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
@@ -108,7 +105,7 @@
             }
 
             searchLocal(keyword);
-            saveKeyword(keyword);
+            // getKeywords();
         });
 
         jQuery('#keyword').keydown(function(event) {
@@ -134,6 +131,9 @@
                 "type" : "GET",
                 "data" : {
                     "keyword"       : keyword
+                },
+                complete: function() {
+                    getKeywords();
                 }
             },
             columns :
@@ -153,27 +153,21 @@
             ],
             recordsTotal : "recordsTotal",
             recordsFiltered : "recordsFiltered",
+            draw : "draw"
         });
     }
 
-    function saveKeyword(keyword) {
+    function getKeywords() {
         jQuery.ajax({
             url: "/api/local/keyword",
             type: "GET",
-            timeout: 3000,
-            data: {
-                keyword : keyword
-            }
+            timeout: 3000
         }).success(function(result){
             jQuery('#tr_favorite_search_keyword').html('');
             jQuery.each(result, function(index, itemData) {
                 jQuery('#tr_favorite_search_keyword').append('<td>'+itemData.keyword+' ('+itemData.searchCount+')</td>');
             });
         });
-    }
-
-    function detailSearch (keyword, x, y) {
-        alert(keyword);
     }
 </script>
 

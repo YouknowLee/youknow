@@ -1,6 +1,7 @@
 package com.interview.youknow.domain.service;
 
 import com.interview.youknow.domain.model.KakaoLocalSearchResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 public class KakaoLocalSearchServiceImpl implements LocalSearchService {
 
@@ -57,6 +59,9 @@ public class KakaoLocalSearchServiceImpl implements LocalSearchService {
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<KakaoLocalSearchResponse> response = apiRestTemplate.exchange(url, HttpMethod.GET, requestEntity, KakaoLocalSearchResponse.class);
+
+        if (response.getStatusCodeValue() != 200)
+            log.error("status[{}], url[{}]", response.getStatusCode(), url);
 
         return response.getBody();
     }

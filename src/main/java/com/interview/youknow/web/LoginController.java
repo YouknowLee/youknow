@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -18,7 +19,7 @@ public class LoginController {
     private ProjectUserRepository projectUserRepository;
 
     @PostMapping("/login")
-    public ModelAndView login (@ModelAttribute ProjectUser reqProjectUser, ModelAndView mav, HttpSession session) {
+    public ModelAndView login (@ModelAttribute ProjectUser reqProjectUser, ModelAndView mav, HttpServletRequest request) {
 
         if (reqProjectUser == null || reqProjectUser.getUserId() == null || reqProjectUser.getUserPw() == null) {
             mav.setViewName("redirect:/index");
@@ -33,7 +34,7 @@ public class LoginController {
             return mav;
         }
 
-        session.setAttribute("projectUser", projectUser);
+        request.getSession().setAttribute("userID", reqProjectUser.getUserId());
         mav.setViewName("redirect:/local/index");
         return mav;
     }

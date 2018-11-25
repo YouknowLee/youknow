@@ -1,13 +1,13 @@
 package com.interview.youknow.web;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class IndexController {
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public ModelAndView base () {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("redirect:/index");
@@ -15,7 +15,7 @@ public class IndexController {
         return mav;
     }
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public ModelAndView index (ModelAndView mav) {
         mav.setViewName("login_page");
 

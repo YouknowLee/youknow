@@ -2,7 +2,6 @@ package com.interview.youknow.domain.service;
 
 import com.interview.youknow.domain.model.KakaoLocalSearchResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,10 +25,6 @@ public class KakaoLocalSearchServiceImpl implements LocalSearchService {
 
     @Value("${kakao.local.search.url}")
     private String KAKAO_LOCAL_SEARCH_URL_PATH;
-
-
-    @Autowired
-    private RestTemplate apiRestTemplate;
 
     @Override
     public KakaoLocalSearchResponse requestLocalSearch(int start, String keyword) {
@@ -58,7 +53,8 @@ public class KakaoLocalSearchServiceImpl implements LocalSearchService {
         headers.add("Authorization", PREFIX_APPKEY + " " +KAKAO_RESTAPI_KEY);
         HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<KakaoLocalSearchResponse> response = apiRestTemplate.exchange(url, HttpMethod.GET, requestEntity, KakaoLocalSearchResponse.class);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<KakaoLocalSearchResponse> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, KakaoLocalSearchResponse.class);
 
         if (response.getStatusCodeValue() != 200)
             log.error("status[{}], url[{}]", response.getStatusCode(), url);

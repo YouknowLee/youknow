@@ -7,7 +7,10 @@ import com.interview.youknow.domain.repository.SearchKeywordRepository;
 import com.interview.youknow.domain.service.KakaoLocalSearchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +48,7 @@ public class LocalApiController {
     }
 
     @GetMapping("/keyword")
-    public @ResponseBody
-    List<SearchKeyword> getKeywords () {
+    public List<SearchKeyword> getKeywords () {
         List<SearchKeyword> searchKeywords = searchKeywordRepository.findAll(new Sort(Sort.Direction.DESC, "searchCount"));
         return searchKeywords.subList(0, searchKeywords.size() > 10 ? 10 : searchKeywords.size());
     }

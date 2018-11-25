@@ -18,8 +18,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/").setCachePeriod(1000);
-
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/").setCachePeriod(1000);
     }
 
     @Override
